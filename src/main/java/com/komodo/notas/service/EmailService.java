@@ -2,7 +2,7 @@ package com.komodo.notas.service;
 
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;
-import com.resend.services.emails.model.SendEmailRequest;
+import com.resend.services.emails.model.CreateEmailOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class EmailService {
                 "<p>Este código expira en 10 minutos.</p>" +
                 "</div>";
 
-        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+        CreateEmailOptions params = CreateEmailOptions.builder()
                 .from(fromEmail)
                 .to(to)
                 .subject(subject)
@@ -34,7 +34,7 @@ public class EmailService {
                 .build();
 
         try {
-            resend.emails().send(sendEmailRequest);
+            resend.emails().send(params);
         } catch (ResendException e) {
             e.printStackTrace();
             throw new RuntimeException("Error enviando email OTP", e);
