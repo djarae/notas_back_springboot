@@ -78,10 +78,6 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
         
-        if (!user.isActive()) {
-            throw new RuntimeException("La cuenta no está verificada. Por favor verifica con tu OTP.");
-        }
-
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Credenciales inválidas");
         }
