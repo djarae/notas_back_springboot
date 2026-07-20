@@ -38,7 +38,7 @@ public class AuthService {
         return String.format("%06d", number);
     }
 
-    public void register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         Optional<User> existing = userRepository.findByEmail(request.getEmail());
         if (existing.isPresent() && existing.get().isActive()) {
             throw new RuntimeException("El correo ya está registrado y activo.");
@@ -47,18 +47,11 @@ public class AuthService {
         User user = existing.orElse(new User());
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setActive(false);
+        user.setActive(true); // Activated immediately without OTP
         userRepository.save(user);
 
-        String code = generateOtpCode();
-        Otp otp = new Otp();
-        otp.setEmail(user.getEmail());
-        otp.setCode(code);
-        otp.setType(Otp.OtpType.REGISTRATION);
-        otp.setExpiresAt(LocalDateTime.now().plusMinutes(10));
-        otpRepository.save(otp);
-
-        emailService.sendOtpEmail(user.getEmail(), code, true);
+        String token = jwtUtils.generateToken(user.getEmail());
+        return new AuthResponse(token, "Registro exitoso");
     }
 
     public AuthResponse verifyRegistrationOtp(VerifyOtpRequest request) {

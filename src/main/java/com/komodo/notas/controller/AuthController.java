@@ -16,8 +16,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
-            authService.register(request);
-            return ResponseEntity.ok(new AuthResponse(null, "Código OTP enviado al correo"));
+            AuthResponse response = authService.register(request);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new AuthResponse(null, e.getMessage()));
         }
