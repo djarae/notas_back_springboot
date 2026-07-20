@@ -2,9 +2,9 @@ spring:
   application:
     name: notas
   datasource:
-    url: jdbc:postgresql://ep-noisy-wind-auvjlq6g-pooler.c-10.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-    username: neondb_owner
-    password: npg_ewKR8QPNCD4Y
+    url: ${DATABASE_URL:jdbc:postgresql://ep-noisy-wind-auvjlq6g-pooler.c-10.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require}
+    username: ${DATABASE_USERNAME:neondb_owner}
+    password: ${DATABASE_PASSWORD:npg_ewKR8QPNCD4Y}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,8 +17,11 @@ spring:
 
 app:
   jwt:
-    secret: "UnSecretoMuyLargoParaElJWTDeKomodoNotasAppQueDebeSerMayorA256BitsParaSerSeguro"
-    expiration-ms: 86400000 # 24 horas
+    secret: ${JWT_SECRET:UnSecretoMuyLargoParaElJWTDeKomodoNotasAppQueDebeSerMayorA256BitsParaSerSeguro}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 horas
   resend:
-    api-key: "re_VNzZtd3i_8DLwFpsMESwbT1T8L3jBhtnc"
-    from-email: "onboarding@resend.dev"
+    api-key: ${RESEND_API_KEY:re_VNzZtd3i_8DLwFpsMESwbT1T8L3jBhtnc}
+    from-email: ${RESEND_FROM_EMAIL:onboarding@resend.dev}
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4200}
+
