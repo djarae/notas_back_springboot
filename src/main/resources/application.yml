@@ -9,11 +9,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
 
 app:
   jwt:
@@ -25,3 +24,9 @@ app:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4200}
 
+logging:
+  level:
+    org.hibernate.SQL: WARN
+    org.hibernate.orm.jdbc.bind: WARN
+    com.komodo.notas.controller: DEBUG
+    com.komodo.notas.service: DEBUG
