@@ -102,4 +102,40 @@ public class NoteService {
         note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
     }
+
+    public void copyNoteToCategories(String email, UUID noteId, List<Long> categoryIds) {
+        User user = getUser(email);
+        Note original = noteRepository.findByIdAndUserAndDeletedAtIsNull(noteId, user)
+                .orElseThrow(() -> new RuntimeException("Nota no encontrada"));
+
+        if (categoryIds == null || categoryIds.isEmpty()) return;
+
+        for (Long catId : categoryIds) {
+            Category targetCat = null;
+            if (catId != null) {
+                targetCat = categoryRepository.findByIdAndUserAndDeletedAtIsNull(catId, user)
+                        .orElseThrow(() -> new RuntimeException("Categoría destino no encontrada"));
+            }
+            
+            // Si la nota ya está en la categoría destino, omitimos (opcional, pero útil)
+            if (original.getCategory() == null && targetCat == null) continue;
+            if (original.getCategory() != null && targetCat != null && original.getCategory().getId().equals(targetCat.getId())) continue;
+
+            Note copy = new Note();
+            copy.setUser(user);
+            copy.setCategory(targetCat);
+            copy.setTitle(original.getTitle());
+            copy.setBody(original.getBody());
+            copy.setNoteType(original.getNoteType());
+            noteRepository.save(copy);
+        }
+    }
+
+    public void moveNoteToCategories(String email, UUID noteId, List<Long> categoryIds) {
+        // Copiamos a los nuevos destinos
+        copyNoteToCategories(email, noteId, categoryIds);
+        
+        // Eliminamos la original
+        deleteNote(email, noteId);
+    }
 }

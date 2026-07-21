@@ -77,6 +77,28 @@ public class NoteController {
         }
     }
 
+    @PostMapping("/{id}/copy-to")
+    public ResponseEntity<?> copyNoteToCategories(Authentication auth, @PathVariable UUID id,
+                                                  @RequestBody MultiCategoryRequest req) {
+        try {
+            noteService.copyNoteToCategories(auth.getName(), id, req.getCategoryIds());
+            return ResponseEntity.ok("Nota copiada correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/move-to")
+    public ResponseEntity<?> moveNoteToCategories(Authentication auth, @PathVariable UUID id,
+                                                  @RequestBody MultiCategoryRequest req) {
+        try {
+            noteService.moveNoteToCategories(auth.getName(), id, req.getCategoryIds());
+            return ResponseEntity.ok("Nota movida correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Data
     public static class NoteRequest {
         private Long categoryId;
@@ -88,5 +110,10 @@ public class NoteController {
     @Data
     public static class MoveRequest {
         private Long categoryId; // null = move to General
+    }
+
+    @Data
+    public static class MultiCategoryRequest {
+        private List<Long> categoryIds; // null in the list means 'General'
     }
 }
