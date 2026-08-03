@@ -17,7 +17,7 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET:UnSecretoMuyLargoParaElJWTDeKomodoNotasAppQueDebeSerMayorA256BitsParaSerSeguro}
-    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 horas
+    expiration-ms: ${JWT_EXPIRATION_MS:1576800000000} # 50 años
   resend:
     api-key: ${RESEND_API_KEY:re_VNzZtd3i_8DLwFpsMESwbT1T8L3jBhtnc}
     from-email: ${RESEND_FROM_EMAIL:onboarding@resend.dev}
