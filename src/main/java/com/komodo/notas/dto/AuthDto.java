@@ -2,6 +2,7 @@ package com.komodo.notas.dto;
 
 import lombok.Data;
 
+//Dtos para el manejo de la autenticación
 public class AuthDto {
 
     @Data
